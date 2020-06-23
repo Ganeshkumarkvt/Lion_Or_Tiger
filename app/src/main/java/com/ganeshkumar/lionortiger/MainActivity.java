@@ -1,5 +1,6 @@
 package com.ganeshkumar.lionortiger;
 
+import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,13 +38,25 @@ public class MainActivity extends AppCompatActivity {
     private GridLayout mGridLayout;
     private TextView ST, SL;
     private AlertDialog.Builder mAlertDialog;
+    private View decorView;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        ActionBar actionBar = getActionBar();
+        actionBar.hide();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        alert();
+
+        alert()
+        ;
         for(int i = 0; i < 9;i++) playerChoice[i] = Player.NO;
 
         btn = findViewById(R.id.button);
@@ -143,8 +156,6 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < 9;i++) playerChoice[i] = Player.NO;
         gameover = false;
         btn.setVisibility(View.GONE);
-
-        alert();
 
     }
 
