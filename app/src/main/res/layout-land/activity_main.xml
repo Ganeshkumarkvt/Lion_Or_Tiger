@@ -4,9 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/forest"
+    android:background="@drawable/kaadu"
     tools:context=".MainActivity">
 
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:alpha="0.6"
+        android:background="#00000000"
+        android:gravity="center"
+        android:shadowColor="#000000"
+        android:text="Tiger V/S Lion"
+        android:textColor="#00DC09"
+        android:textColorHighlight="#00000000"
+        android:textSize="70sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/lionScr"
@@ -15,14 +34,14 @@
         android:background="#00000000"
         android:padding="5dp"
         android:shadowColor="#000000"
-        android:text="LION SCORE :"
+        android:text="LION :"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/gridlayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tigerScr"
-        app:layout_constraintTop_toBottomOf="@id/textView" />
+        app:layout_constraintStart_toEndOf="@id/gridlayout"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/gridlayout"
@@ -31,10 +50,10 @@
         android:layout_margin="16dp"
         android:background="#0008CC01"
         app:columnCount="3"
-        app:layout_constraintBottom_toTopOf="@id/button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView"
+        app:layout_constraintTop_toTopOf="parent"
         app:rowCount="3">
 
         <ImageView
@@ -77,8 +96,7 @@
             app:layout_column="2"
             app:layout_row="0"
             app:srcCompat="@drawable/ic_baseline_radio_button_checked_24"
-            tools:ignore="VectorDrawableCompat"
-            />
+            tools:ignore="VectorDrawableCompat"/>
 
         <ImageView
             android:id="@+id/img4"
@@ -166,22 +184,6 @@
 
     </androidx.gridlayout.widget.GridLayout>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="#33000000"
-        android:shadowColor="#000000"
-        android:text="Tiger V/S Lion"
-        android:textColor="#00DC09"
-        android:textColorHighlight="#00000000"
-        android:textSize="30sp"
-        android:textStyle="bold|italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
@@ -194,8 +196,8 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gridlayout" />
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/lionScr" />
 
     <TextView
         android:id="@+id/tigerScr"
@@ -204,12 +206,19 @@
         android:background="#00000000"
         android:padding="5dp"
         android:shadowColor="#000000"
-        android:text="TIGER SCORE :"
+        android:text="TIGER :"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/gridlayout"
-        app:layout_constraintEnd_toStartOf="@id/lionScr"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/gridlayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.76" />
 </androidx.constraintlayout.widget.ConstraintLayout>

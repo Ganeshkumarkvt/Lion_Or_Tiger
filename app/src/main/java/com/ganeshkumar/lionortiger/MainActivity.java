@@ -1,8 +1,7 @@
 package com.ganeshkumar.lionortiger;
 
-import android.app.ActionBar;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,12 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
 import java.util.Arrays;
+
+import static android.graphics.Color.RED;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    Player currentPlayer = Player.TIGER;
-    Player[] playerChoice = new Player[9];
+    Player currentPlayer;
+    String[] playerChoice = new String[9];
     int T=0,L=0;
 
     int [][] winner = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8},
@@ -35,34 +36,67 @@ public class MainActivity extends AppCompatActivity {
 
     boolean gameover = false;
     private Button btn;
+    private ImageView tappedImageView;
+    private ImageView saved;
     private GridLayout mGridLayout;
     private TextView ST, SL;
-    private AlertDialog.Builder mAlertDialog;
-    private View decorView;
+    final private String TKEY = "tiger", LKEY = "lion", CPKEY ="Player", ARKEY="TAG",Go ="+";
+    int count=0;
+    int[] ID ={R.id.img1, R.id.img2, R.id.img3, R.id.img3, R.id.img4, R.id.img5, R.id.img6, R.id.img7, R.id.img8, R.id.img9};
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        ActionBar actionBar = getActionBar();
-        actionBar.hide();
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        alert()
-        ;
-        for(int i = 0; i < 9;i++) playerChoice[i] = Player.NO;
-
+        if(savedInstanceState == null) {alert();}
+        for(int i = 0; i < 9;i++) playerChoice[i] = String.valueOf(Player.NO);
         btn = findViewById(R.id.button);
         ST = findViewById(R.id.tigerScr);
         SL = findViewById(R.id.lionScr);
         mGridLayout = findViewById(R.id.gridlayout);
+        if(savedInstanceState != null ){
+            T=savedInstanceState.getInt(TKEY);
+            L=savedInstanceState.getInt(LKEY);
+            gameover=savedInstanceState.getBoolean(Go);
+            currentPlayer =(Player)savedInstanceState.getSerializable(CPKEY);
+            playerChoice = savedInstanceState.getStringArray(ARKEY);
+            SL.setText("LION :"+ L);
+            ST.setText("TIGER :"+T);
+            if(currentPlayer == Player.TIGER){
+                ST.setBackgroundColor(RED);
+                SL.setBackgroundResource(R.color.d);
+            }else if(currentPlayer == Player.LION){
+                SL.setBackgroundColor(RED);
+                ST.setBackgroundResource(R.color.d);
+            }
+            for(String cr:playerChoice){
+
+                if(cr.equals(String.valueOf(Player.TIGER))){
+                    saved = findViewById(ID[count]);
+                    saved.setImageResource(R.drawable.tiger);
+                    saved.setAlpha(1f);
+                    saved = null;
+                    count++;
+                }
+                else if(cr.equals(String.valueOf(Player.LION))){
+                    saved = findViewById(ID[count]);
+                    saved.setImageResource(R.drawable.lion);
+                    saved.setAlpha(1f);
+                    saved = null;
+                    count++;
+                }
+                else  if(cr.equals(String.valueOf(Player.NO))){
+                    saved = findViewById(ID[count]);
+                    saved.setImageResource(R.drawable.ic_baseline_radio_button_checked_24);
+                    saved.setAlpha(0.5f);
+                    saved = null;
+                    count++;
+                }
+            }
+            count = 0;
+        }
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,31 +110,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    @SuppressLint({"ResourceAsColor", "SetTextI18n"})
     public void ImageViewIsTapped(View imageView) {
 
-        ImageView tappedImageView = (ImageView) imageView;
+        tappedImageView = (ImageView) imageView;
 
         int tiTag = Integer.parseInt(tappedImageView.getTag().toString());
 
-        if(playerChoice[tiTag] == Player.NO && gameover == false) {
+        if(playerChoice[tiTag].equals(String.valueOf(Player.NO)) && !gameover) {
 
             tappedImageView.setTranslationY(-2000);
 
-            playerChoice[tiTag] = currentPlayer;
+            playerChoice[tiTag] = String.valueOf(currentPlayer);
 
             if (currentPlayer == Player.TIGER) {
                 tappedImageView.setImageResource(R.drawable.tiger);
                 currentPlayer = Player.LION;
+                SL.setBackgroundColor(RED);
+                ST.setBackgroundResource(R.color.d);
             } else if (currentPlayer == Player.LION) {
                 tappedImageView.setImageResource(R.drawable.lion);
                 currentPlayer = Player.TIGER;
+                ST.setBackgroundColor(RED);
+                SL.setBackgroundResource(R.color.d);
             }
-            tappedImageView.animate().translationYBy(2000).alpha(1).rotation(1080).setDuration(500);
+            tappedImageView.animate().translationYBy(2000).alpha(1).rotation(1080).setDuration(100);
 
             for (int[] winnerColumns : winner) {
-                if (playerChoice[winnerColumns[0]] == playerChoice[winnerColumns[1]]
-                        && playerChoice[winnerColumns[1]] == playerChoice[winnerColumns[2]]
-                        && playerChoice[winnerColumns[0]] != Player.NO) {
+                if (playerChoice[winnerColumns[0]].equals(playerChoice[winnerColumns[1]])
+                        && playerChoice[winnerColumns[1]].equals(playerChoice[winnerColumns[2]])
+                        && !playerChoice[winnerColumns[0]].equals(String.valueOf(Player.NO))) {
 
                     gameover = true;
                     if (currentPlayer == Player.TIGER) {
@@ -119,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
                     btn.setVisibility(View.VISIBLE);
 
-                }else if(!(Arrays.asList(playerChoice).contains(Player.NO))){
+                }else if(!(Arrays.asList(playerChoice).contains(String.valueOf(Player.NO)))){
                     btn.setVisibility(View.VISIBLE);
                 }
 
@@ -130,16 +169,28 @@ public class MainActivity extends AppCompatActivity {
 
             private void alert(){
 
-                mAlertDialog = new AlertDialog.Builder(this)
-                        .setTitle("WARNING")
-                        .setMessage("FIRST PLAYER must play with TIGER\nSECOND PLAYER play with LION")
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this)
+                        .setTitle("TWO PLAYER GAME")
+                        .setMessage("FIRST PLAYER,\nChoose an Animal below.")
                         .setIcon(R.drawable.ic_baseline_warning_24)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setCancelable(false)
+                        .setPositiveButton("TIGER", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                currentPlayer = Player.TIGER;
+                                ST.setBackgroundColor(RED);
+                                SL.setBackgroundResource(R.color.d);
+                            }
+                        })
+                        .setNegativeButton("LION", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                currentPlayer = Player.LION;
+                                SL.setBackgroundColor(RED);
+                                ST.setBackgroundResource(R.color.d);
                             }
                         });
-                mAlertDialog.create().show();
+                alertDialog.create().show();
 
             }
 
@@ -153,11 +204,29 @@ public class MainActivity extends AppCompatActivity {
 
         }
         currentPlayer = Player.TIGER;
-        for(int i = 0; i < 9;i++) playerChoice[i] = Player.NO;
+        ST.setBackgroundColor(RED);
+        SL.setBackgroundResource(R.color.d);
+        for(int i = 0; i < 9;i++) playerChoice[i] = String.valueOf(Player.NO);
         gameover = false;
         btn.setVisibility(View.GONE);
+        alert();
 
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(TKEY,T);
+        outState.putInt(LKEY,L);
+        outState.putSerializable(CPKEY, currentPlayer);
+        outState.putStringArray(ARKEY,playerChoice);
+        outState.putBoolean(Go,gameover);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
 }
